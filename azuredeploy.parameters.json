@@ -1,0 +1,106 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "rgName": {
+      "value": "<RESOURCE_GROUP_NAME>"
+    },
+    "location": {
+      "value": "westus2"
+    },
+    "workspaceName": {
+      "value": "<WORKSPACE_NAME>"
+    },
+    "pricingTier": {
+      "value": "PerGB2018"
+    },
+    "capacityReservation": {
+      "value": 100
+    },
+    "enableDataConnectors": {
+      "value": [
+        "AzureActiveDirectory",
+        "AzureActivity",
+        "OfficeIRM",
+        "Office365",
+        "ThreatIntelligence"
+      ]
+    },
+    "severityLevels": {
+      "value": [
+        "High",
+        "Medium"
+      ]
+    },
+    "dailyQuota": {
+      "value": 0
+    },
+    "dataRetention": {
+      "value": 90
+    },
+    "immediatePurgeDataOn30Days": {
+      "value": true
+    },
+    "enableSolutions1P": {
+      "value": [
+        "Azure Active Directory",
+        "Azure Activity",
+        "Microsoft 365",
+        "Microsoft Purview Insider Risk Management",
+        "Teams",
+        "Threat Intelligence"
+      ]
+    },
+    "enableSolutionsEssentials": {
+      "value": [
+        "Attacker Tools Threat Protection Essentials",
+        "Cloud Identity Threat Protection Essentials",
+        "Cloud Service Threat Protection Essentials",
+        "Endpoint Threat Protection Essentials",
+        "Network Session Essentials",
+        "Network Threat Protection Essentials",
+        "SOC Handbook",
+        "SOC Process Framework",
+        "UEBA Essentials"
+      ]
+    },
+    "enableSolutionsTraining": {
+      "value": [
+        "KQL Training",
+        "Microsoft Sentinel Training Lab"
+      ]
+    },
+    "aadStreams": {
+      "value": [
+        "SignInLogs",
+        "AuditLogs"
+      ]
+    },
+    "enableUeba": {
+      "value": true
+    },
+    "identityProviders": {
+      "value": [
+        "AzureActiveDirectory"
+      ]
+    },
+    "enableDiagnostics": {
+      "value": true
+    },
+    "enableMLAlerts": {
+      "value": false
+    },
+    "enableScheduledAlerts": {
+      "value": true
+    },
+    "_artifactsLocation": {
+      "value": "https://raw.githubusercontent.com/Avertium/MoM_SentinelBootstrap_v2/main/"
+    },
+    "enableXDRLighthouse": {
+      "value": true
+    },
+    "mspTenantId": {
+      "value": "<MANAGING_TENANT_ID>"
+    }
+  }
+}
