@@ -45,7 +45,7 @@ This repo (`MoM_SentinelBootstrap_v2`) replaces the original `MoM_SentinelBootst
 - **Removed Entra ID Identity Protection connector.** Workspaces onboarded to the Microsoft Defender portal (new Sentinel workspaces are often onboarded automatically) receive Identity Protection alerts through Defender XDR, and the legacy connector can no longer be changed from Sentinel. Deploying it failed with *"The workspace is enabled through the Microsoft Threat Protection Portal"*.
 - **Azure Activity uses a subscription diagnostic setting.** The legacy `AzureActivityLog` data source is deprecated by Microsoft (*DataSourceDeprecated*). The template now creates a subscription diagnostic setting named `<workspaceName>-AzureActivity` that sends all Activity log categories to the workspace.
 - **Entra ID diagnostic setting can be skipped.** If `aadStreams` is empty, the Entra ID diagnostic setting is not created.
-- **Repo location updated.** The Deploy to Azure button and the `_artifactsLocation` default now point to `https://raw.githubusercontent.com/Avertium/MoM_SentinelBootstrap_v2/main/`.
+- **Repo location updated.** The Deploy to Azure button and the `_artifactsLocation` default now point to `https://raw.githubusercontent.com/Avertium/MoM_SentinelBootstrap_v2/master/`.
 - **Parameter file added.** `azuredeploy.parameters.json` prefills the wizard with Avertium's standard selections (see below).
 
 ## Deployment notes
@@ -82,7 +82,7 @@ To use it: open the custom deployment, select **Edit parameters** > **Load file*
 
 ## Try it now!
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAvertium%2FMoM_SentinelBootstrap_v2%2Fmain%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAvertium%2FMoM_SentinelBootstrap_v2%2Fmain%2FcreateUiDefinition.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAvertium%2FMoM_SentinelBootstrap_v2%2Fmaster%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAvertium%2FMoM_SentinelBootstrap_v2%2Fmaster%2FcreateUiDefinition.json" target="_blank">
     <img src="https://aka.ms/deploytoazurebutton""/>
 </a>
 

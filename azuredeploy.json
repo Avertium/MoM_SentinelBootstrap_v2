@@ -148,7 +148,7 @@
             "metadata": {
                 "description": "The location of resources"
             },
-            "defaultValue": "https://raw.githubusercontent.com/Avertium/MoM_SentinelBootstrap_v2/main/"
+            "defaultValue": "https://raw.githubusercontent.com/Avertium/MoM_SentinelBootstrap_v2/master/"
         },
         "enableXDRLighthouse": {
             "type": "bool",
