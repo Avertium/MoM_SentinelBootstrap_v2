@@ -36,10 +36,15 @@ $allSolutions = (Invoke-RestMethod -Method "Get" -Uri $url -Headers $authHeader 
 
 #Deploy each single solution
 #$templateParameter = @{"workspace-location" = $Region; workspace = $Workspace }
+$missingSolutions = @()
 foreach ($deploySolution in $Solutions) {
-    $singleSolution = $allSolutions | Where-Object { $_.properties.displayName -Contains $deploySolution }
+    # Values can be a Content Hub contentId (preferred, stable) or a display name
+    $deploySolution = $deploySolution.Trim().Trim('"')
+    if ([string]::IsNullOrWhiteSpace($deploySolution)) { continue }
+    $singleSolution = $allSolutions | Where-Object { $_.properties.contentId -eq $deploySolution -or $_.properties.displayName -eq $deploySolution } | Select-Object -First 1
     if ($null -eq $singleSolution) {
-        Write-Error "Unable to get find solution with name $deploySolution" 
+        Write-Warning "Content Hub solution not found: $deploySolution"
+        $missingSolutions += $deploySolution
     }
     else {
         $solutionURL = $baseUri + "/providers/Microsoft.SecurityInsights/contentProductPackages/$($singleSolution.name)?api-version=2023-04-01-preview"
@@ -82,6 +87,12 @@ foreach ($deploySolution in $Solutions) {
 
 }
 
+if ($missingSolutions.Count -gt 0) {
+    Write-Warning ("Solutions not found in Content Hub: " + ($missingSolutions -join ", "))
+}
+$DeploymentScriptOutputs = @{}
+$DeploymentScriptOutputs['missingSolutions'] = ($missingSolutions -join ", ")
+
 #####
 #create rules from any rule templates that came from solutions
 #####
@@ -117,6 +128,12 @@ foreach ($result in $results ) {
         $templateVersion = $result.properties.mainTemplate.resources.properties[1].version
         $template = $result.properties.mainTemplate.resources.properties[0]
         $kind = $result.properties.mainTemplate.resources.kind
+        # Defender XDR creates incidents for Microsoft security products; these rules would duplicate them
+        # and are not supported in the Defender portal.
+        if ($kind -contains "MicrosoftSecurityIncidentCreation") {
+            Write-Host "Skipping Microsoft incident creation rule: " $result.properties.mainTemplate.resources[0].properties.displayName
+            continue
+        }
         $displayName = $template.displayName
         $eventGroupingSettings = $template.eventGroupingSettings
         if ($null -eq $eventGroupingSettings) {

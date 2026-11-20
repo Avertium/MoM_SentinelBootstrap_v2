@@ -21,9 +21,7 @@
       "value": [
         "AzureActiveDirectory",
         "AzureActivity",
-        "OfficeIRM",
-        "Office365",
-        "ThreatIntelligence"
+        "Office365"
       ]
     },
     "severityLevels": {
@@ -43,37 +41,61 @@
     },
     "enableSolutions1P": {
       "value": [
-        "Azure Active Directory",
-        "Azure Activity",
-        "Microsoft 365",
-        "Microsoft Purview Insider Risk Management",
-        "Teams",
-        "Threat Intelligence"
+        "azuresentinel.azure-sentinel-solution-azureactivity",
+        "azuresentinel.azure-sentinel-solution-azurekeyvault",
+        "azuresentinel.azure-sentinel-solution-azurestorageaccount",
+        "azuresentinel.azure-sentinel-solution-azurewebapplicationfirewal",
+        "azuresentinel.azure-sentinel-solution-commoneventformat",
+        "azuresentinel.azure-sentinel-solution-customlogsviaama",
+        "azuresentinel.azure-sentinel-solution-azureactivedirectory",
+        "azuresentinel.azure-sentinel-solution-microsoft365defender",
+        "azuresentinel.azure-sentinel-solution-microsoftdefenderendpoint",
+        "azuresentinel.azure-sentinel-solution-mdefenderforidentity",
+        "azuresentinel.azure-sentinel-solution-microsoftdefenderforo365",
+        "azuresentinel.azure-sentinel-solution-microsoftdefendercloudapps",
+        "azuresentinel.azure-sentinel-solution-azureactivedirectoryip",
+        "azuresentinel.azure-sentinel-solution-networksecuritygroup",
+        "azuresentinel.azure-sentinel-solution-office365",
+        "azuresentinel.azure-sentinel-solution-syslog",
+        "azuresentinel.azure-sentinel-solution-threatintelligence-updated"
       ]
     },
     "enableSolutionsEssentials": {
       "value": [
-        "Attacker Tools Threat Protection Essentials",
-        "Cloud Identity Threat Protection Essentials",
-        "Cloud Service Threat Protection Essentials",
-        "Endpoint Threat Protection Essentials",
-        "Network Session Essentials",
-        "Network Threat Protection Essentials",
-        "SOC Handbook",
-        "SOC Process Framework",
-        "UEBA Essentials"
+        "azuresentinel.azure-sentinel-solution-attackertools",
+        "azuresentinel.azure-sentinel-solution-cloudthreatdetection",
+        "azuresentinel.azure-sentinel-solution-cloudservicedetection",
+        "azuresentinel.azure-sentinel-solution-endpointthreat",
+        "azuresentinel.azure-sentinel-solution-networksession",
+        "azuresentinel.azure-sentinel-solution-networkthreatdetection",
+        "microsoftsentinelcommunity.azure-sentinel-solution-sochandbook",
+        "azuresentinel.azure-sentinel-solution-socprocessframework",
+        "azuresentinel.azure-sentinel-solution-uebaessentials"
       ]
     },
     "enableSolutionsTraining": {
       "value": [
-        "KQL Training",
+        "microsoftsentinelcommunity.azure-sentinel-solution-kqltraining",
         "Microsoft Sentinel Training Lab"
       ]
     },
     "aadStreams": {
       "value": [
         "SignInLogs",
-        "AuditLogs"
+        "AuditLogs",
+        "NonInteractiveUserSignInLogs",
+        "ServicePrincipalSignInLogs",
+        "ManagedIdentitySignInLogs",
+        "ProvisioningLogs",
+        "ADFSSignInLogs",
+        "UserRiskEvents",
+        "RiskyUsers",
+        "NetworkAccessTrafficLogs",
+        "RiskyServicePrincipals",
+        "ServicePrincipalRiskEvents",
+        "MicrosoftGraphActivityLogs",
+        "EnrichedOffice365AuditLogs",
+        "RemoteNetworkHealthLogs"
       ]
     },
     "enableUeba": {

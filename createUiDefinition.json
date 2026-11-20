@@ -29,7 +29,7 @@
                     "regex": "^[A-Za-z0-9][A-Za-z0-9-]+[A-Za-z0-9]$",
                     "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
                 },
-                "visible": true  
+                "visible": true
             },
             {
                 "name": "workspaceName",
@@ -80,7 +80,11 @@
                 "placeholder": "",
                 "multiselect": false,
                 "toolTip": "Visit [Azure Monitor Pricing page](https://azure.microsoft.com/pricing/details/monitor/) for more information.",
-                "defaultValue": [{"value": "PerGB2018"}],
+                "defaultValue": [
+                    {
+                        "value": "PerGB2018"
+                    }
+                ],
                 "constraints": {
                     "allowedValues": [
                         {
@@ -143,482 +147,708 @@
                 },
                 "visible": "[if(equals(basics('pricingTier'),'CapacityReservation'), true, false)]"
             }
-          ],
-          "steps": [
+        ],
+        "steps": [
             {
-              "name": "settings",
-              "label": "Settings",
-              "elements": [
-                  {
-                      "name": "infoBoxSettings",
-                      "type": "Microsoft.Common.InfoBox",
-                      "visible": true,
-                      "options": {
-                          "icon": "Info",
-                          "text": "Please select which settings you would like to enable in your Microsoft Sentinel environment"
-                      }
-                  },
-                  {
-                      "name": "enableUeba",
-                      "type": "Microsoft.Common.CheckBox",
-                      "label": "Enable User Entity Behavior Analytics (UEBA)? Global Admin or Security Admin permission required.",
-                "toolTip": "This will only enable synchronization with identity providers. Data sources need to be enabled separately. [Learn more](https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics)",
-                      "constraints": {
-                          "required": false,
-                          "validationMessage": "Please choose"
-                      }
-                  },
-                  {
-                      "name": "identityProviders",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select which Identity Providers will be synchronized with UEBA",
-                      "placeholder": "Choose identity provider",
-                      "multiselect": true,
-                      "toolTip": "Select the identity providers that you would like to enable for UEBA",
-                      "constraints": {
-                          "allowedValues": [
-                              {
-                                  "label": "Entra ID",
-                                  "value": "AzureActiveDirectory"
-                              },
-                              {
-                                  "label": "Active Directory (requires Microsoft Defender for Identity)",
-                                  "value": "ActiveDirectory"
-                              }
-                          ],
-                          "required": false
-                      },
-                      "visible": "[if(steps('settings').enableUeba, true, false)]"
-                  },
-                  {
-                      "name": "enableDiagnostics",
-                      "type": "Microsoft.Common.CheckBox",
-                      "label": "Enable Sentinel health diagnostics?",
-                      "toolTip": "This will enable diagnostics settings for Analytics rules, Data Connectors and Automation rules. [Learn more](https://learn.microsoft.com/azure/sentinel/health-audit)",
-                      "constraints": {
-                          "required": false,
-                          "validationMessage": "Please select"
-                      },
-                      "visible": true
-                  }
-              ]
-          },
-          {
-              "name": "solutions",
-              "label": "Content Hub Solutions",
-              "elements": [
-                  {
-                      "name": "infoBox1",
-                      "type": "Microsoft.Common.InfoBox",
-                      "visible": true,
-                      "options": {
-                          "icon": "Info",
-                          "text": "Please select which Solutions you want to install into your Microsoft Sentinel environment. Solutions may contain different content types, like data connectors, analytics rules, parsers, workbooks, playbooks, hunting queries, etc.",
-                          "uri": "https://learn.microsoft.com/azure/sentinel/sentinel-solutions-catalog"
-                      }
-                  },
-                  {
-                      "name": "enableSolutions1P",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select Microsoft Content Hub solutions to install",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "filter": true,
-                      "filterPlaceholder": "Filter items ...",
-                      "multiLine": true,
-                      "defaultDescription": "A value for selection",
-                      "toolTip": "Select the Microsoft solutions that you would like to install",
-                      "constraints": {
-                          "allowedValues": [
-                              {
-                                  "label": "Entra ID",
-                                  "description": "The Entra ID solution for Microsoft Sentinel enables you to ingest Entra ID Audit,Sign-in,Provisioning,Risk Events and Risky User/Service Principal logs using Diagnostic Settings into Microsoft Sentinel.",
-                                  "value": "Azure Active Directory"
-                              },
-                              {
-                                  "label": "Azure Activity",
-                                  "description": "The Azure Activity solution for Microsoft Sentinel enables you to ingest Azure Activity Administrative, Security, Service Health, Alert, Recommendation, Policy, Autoscale and Resource Health logs using Diagnostic Settings into Microsoft Sentinel.",
-                                  "value": "Azure Activity"
-                              },
-                              {
-                                  "label": "Dynamics 365 CE",
-                                  "description": "The Microsoft Sentinel solution for Dynamics 365 CE apps provides threat monitoring, detection and incident response capabilities for Dynamics 365 CE apps.",
-                                  "value": "Dynamics 365 CE Apps"
-                              },
-                              {
-                                  "label": "Microsoft 365",
-                                  "description": "The Microsoft 365 solution for Microsoft Sentinel enables you to ingest operational logs from Microsoft 365 to gain insights into user and admin activity across your collaboration platforms such as Teams, SharePoint and Exchange.",
-                                  "value": "Microsoft 365"
-                              },
-                              {
-                                  "label": "Microsoft Insider Risk Management",
-                                  "description": "This solution enables insider risk management teams to investigate risk-based behavior across 25+ Microsoft products. This solution is a better-together story between Microsoft Sentinel and Microsoft Purview Insider Risk Management.",
-                                  "value": "Microsoft Purview Insider Risk Management"
-                              },
-                              {
-                                  "label": "Microsoft PowerBI",
-                                  "description": "The Microsoft PowerBI solution enables you to track user activities in your PowerBI environment.",
-                                  "value": "Microsoft PowerBI"
-                              },
-                              {
-                                  "label": "Microsoft Project",
-                                  "description": "Stream your Microsoft Project audit logs into Microsoft Sentinel in order to track your project activities.",
-                                  "value": "Microsoft Project"
-                              },
-                              {
-                                  "label": "Microsoft Teams",
-                                  "description": "Microsoft Sentinel for Teams provides Teams security logs visibility and threat protection.",
-                                  "value": "Teams"
-                              },
-                              {
-                                  "label": "Threat Intelligence",
-                                  "description": "Ingest threat indicators into Microsoft Sentinel. Threat indicators can be IP addresses, domains, URLs and file hashes and can be used to correlate across log sources for known indicators of compromise and/or indicators of active attack",
-                                  "value": "Threat Intelligence"
-                              }
-                          ],
-                          "required": false
-                      },
-                      "visible": true
-                  },
-                  {
-                    "name": "enableSolutionsEssentials",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select Essentials Content Hub solutions to install",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "filter": true,
-                      "filterPlaceholder": "Filter items ...",
-                      "multiLine": true,
-                      "defaultDescription": "A value for selection",
-                      "toolTip": "Select essentials solutions that you would like to install",
-                      "constraints": {
-                          "allowedValues": [
+                "name": "settings",
+                "label": "Settings",
+                "elements": [
+                    {
+                        "name": "infoBoxSettings",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": true,
+                        "options": {
+                            "icon": "Info",
+                            "text": "Please select which settings you would like to enable in your Microsoft Sentinel environment"
+                        }
+                    },
+                    {
+                        "name": "enableUeba",
+                        "type": "Microsoft.Common.CheckBox",
+                        "label": "Enable User Entity Behavior Analytics (UEBA)? Global Admin or Security Admin permission required.",
+                        "toolTip": "This will only enable synchronization with identity providers. Data sources need to be enabled separately. [Learn more](https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics)",
+                        "constraints": {
+                            "required": false,
+                            "validationMessage": "Please choose"
+                        }
+                    },
+                    {
+                        "name": "identityProviders",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select which Identity Providers will be synchronized with UEBA",
+                        "placeholder": "Choose identity provider",
+                        "multiselect": true,
+                        "toolTip": "Select the identity providers that you would like to enable for UEBA",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Entra ID",
+                                    "value": "AzureActiveDirectory"
+                                },
+                                {
+                                    "label": "Active Directory (requires Microsoft Defender for Identity)",
+                                    "value": "ActiveDirectory"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": "[if(steps('settings').enableUeba, true, false)]"
+                    },
+                    {
+                        "name": "enableDiagnostics",
+                        "type": "Microsoft.Common.CheckBox",
+                        "label": "Enable Sentinel health diagnostics?",
+                        "toolTip": "This will enable diagnostics settings for Analytics rules, Data Connectors and Automation rules. [Learn more](https://learn.microsoft.com/azure/sentinel/health-audit)",
+                        "constraints": {
+                            "required": false,
+                            "validationMessage": "Please select"
+                        },
+                        "visible": true
+                    }
+                ]
+            },
+            {
+                "name": "solutions",
+                "label": "Content Hub Solutions",
+                "elements": [
+                    {
+                        "name": "infoBox1",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": true,
+                        "options": {
+                            "icon": "Info",
+                            "text": "Please select which Solutions you want to install into your Microsoft Sentinel environment. Solutions may contain different content types, like data connectors, analytics rules, parsers, workbooks, playbooks, hunting queries, etc.",
+                            "uri": "https://learn.microsoft.com/azure/sentinel/sentinel-solutions-catalog"
+                        }
+                    },
+                    {
+                        "name": "enableSolutions1P",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Microsoft Content Hub solutions to install",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "defaultDescription": "A value for selection",
+                        "toolTip": "Select the Microsoft solutions that you would like to install",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Azure Activity",
+                                    "description": "The Azure Activity solution for Microsoft Sentinel enables you to ingest Azure Activity Administrative, Security, Service Health, Alert, Recommendation, Policy, Autoscale and Resource Health logs using Diagnostic Settings into Microsoft Sentinel.",
+                                    "value": "azuresentinel.azure-sentinel-solution-azureactivity"
+                                },
+                                {
+                                    "label": "Azure Key Vault",
+                                    "description": "Azure Key Vault data connector and analytics rules. Requires diagnostic settings on each Key Vault.",
+                                    "value": "azuresentinel.azure-sentinel-solution-azurekeyvault"
+                                },
+                                {
+                                    "label": "Azure Network Security Groups",
+                                    "description": "Azure Network Security Groups data connector. Requires diagnostic settings on each NSG.",
+                                    "value": "azuresentinel.azure-sentinel-solution-networksecuritygroup"
+                                },
+                                {
+                                    "label": "Azure Storage Account",
+                                    "description": "Azure Storage Account data connector. Requires diagnostic settings on each storage account.",
+                                    "value": "azuresentinel.azure-sentinel-solution-azurestorageaccount"
+                                },
+                                {
+                                    "label": "Azure Web Application Firewall (WAF)",
+                                    "description": "Azure WAF data connector and analytics rules. Requires diagnostic settings on each Application Gateway / Front Door.",
+                                    "value": "azuresentinel.azure-sentinel-solution-azurewebapplicationfirewal"
+                                },
+                                {
+                                    "label": "Common Event Format (CEF)",
+                                    "description": "CEF via AMA data connector. Requires a Data Collection Rule and a forwarder running the Azure Monitor Agent.",
+                                    "value": "azuresentinel.azure-sentinel-solution-commoneventformat"
+                                },
+                                {
+                                    "label": "Custom Logs via AMA",
+                                    "description": "Custom logs via AMA data connector. Requires a Data Collection Rule and machines running the Azure Monitor Agent.",
+                                    "value": "azuresentinel.azure-sentinel-solution-customlogsviaama"
+                                },
+                                {
+                                    "label": "Dynamics 365",
+                                    "description": "The Microsoft Sentinel solution for Dynamics 365 CE apps provides threat monitoring, detection and incident response capabilities for Dynamics 365 CE apps.",
+                                    "value": "sentinel4dynamics365.dynamics365connector"
+                                },
+                                {
+                                    "label": "Entra ID",
+                                    "description": "The Entra ID solution for Microsoft Sentinel enables you to ingest Entra ID Audit,Sign-in,Provisioning,Risk Events and Risky User/Service Principal logs using Diagnostic Settings into Microsoft Sentinel.",
+                                    "value": "azuresentinel.azure-sentinel-solution-azureactivedirectory"
+                                },
+                                {
+                                    "label": "Entra ID Protection",
+                                    "description": "Entra ID Protection connector and rules. Alerts arrive through Defender XDR on Defender portal workspaces.",
+                                    "value": "azuresentinel.azure-sentinel-solution-azureactivedirectoryip"
+                                },
+                                {
+                                    "label": "Microsoft 365",
+                                    "description": "The Microsoft 365 solution for Microsoft Sentinel enables you to ingest operational logs from Microsoft 365 to gain insights into user and admin activity across your collaboration platforms such as Teams, SharePoint and Exchange.",
+                                    "value": "azuresentinel.azure-sentinel-solution-office365"
+                                },
+                                {
+                                    "label": "Microsoft Defender for Cloud Apps",
+                                    "description": "Defender for Cloud Apps connector and content.",
+                                    "value": "azuresentinel.azure-sentinel-solution-microsoftdefendercloudapps"
+                                },
+                                {
+                                    "label": "Microsoft Defender for Endpoint",
+                                    "description": "Defender for Endpoint connector and content.",
+                                    "value": "azuresentinel.azure-sentinel-solution-microsoftdefenderendpoint"
+                                },
+                                {
+                                    "label": "Microsoft Defender for Identity",
+                                    "description": "Defender for Identity connector and content.",
+                                    "value": "azuresentinel.azure-sentinel-solution-mdefenderforidentity"
+                                },
+                                {
+                                    "label": "Microsoft Defender for Office 365",
+                                    "description": "Defender for Office 365 connector and content.",
+                                    "value": "azuresentinel.azure-sentinel-solution-microsoftdefenderforo365"
+                                },
+                                {
+                                    "label": "Microsoft Defender XDR",
+                                    "description": "Defender XDR connector and analytics rules (Endpoint, Identity, Office 365, Cloud Apps, Defender alerts, Vulnerability Management, Purview DLP tables).",
+                                    "value": "azuresentinel.azure-sentinel-solution-microsoft365defender"
+                                },
+                                {
+                                    "label": "Microsoft Insider Risk Management",
+                                    "description": "This solution enables insider risk management teams to investigate risk-based behavior across 25+ Microsoft products. This solution is a better-together story between Microsoft Sentinel and Microsoft Purview Insider Risk Management.",
+                                    "value": "azuresentinel.azure-sentinel-solution-insiderriskmanagement"
+                                },
+                                {
+                                    "label": "Microsoft PowerBI",
+                                    "description": "The Microsoft PowerBI solution enables you to track user activities in your PowerBI environment.",
+                                    "value": "azuresentinel.azure-sentinel-solution-microsoftpowerbi"
+                                },
+                                {
+                                    "label": "Microsoft Project",
+                                    "description": "Stream your Microsoft Project audit logs into Microsoft Sentinel in order to track your project activities.",
+                                    "value": "azuresentinel.azure-sentinel-solution-microsoftproject"
+                                },
+                                {
+                                    "label": "Microsoft Teams",
+                                    "description": "Microsoft Sentinel for Teams provides Teams security logs visibility and threat protection.",
+                                    "value": "sentinel4teams.sentinelforteams"
+                                },
+                                {
+                                    "label": "Syslog",
+                                    "description": "Syslog via AMA data connector and analytics rules. Requires a Data Collection Rule and machines running the Azure Monitor Agent.",
+                                    "value": "azuresentinel.azure-sentinel-solution-syslog"
+                                },
+                                {
+                                    "label": "Threat Intelligence",
+                                    "description": "Microsoft Defender Threat Intelligence connector (free Microsoft indicators), TAXII and Upload API connectors, and the TI map analytics rules. Uses the current ThreatIntelIndicators table.",
+                                    "value": "azuresentinel.azure-sentinel-solution-threatintelligence-updated"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": true,
+                        "defaultValue": [
                             {
-                                "label": "Attacker Tools Threat Protection Essentials",
-                                "description": "The Attacker Tools Threat Protection Essentials solution contains security content that is relevant for detection of tools commonly used by attackers in various campaigns",
-                                "value": "Attacker Tools Threat Protection Essentials"
+                                "value": "azuresentinel.azure-sentinel-solution-azureactivity"
                             },
                             {
-                                "label": "Cloud Identity Threat Protection Essentials",
-                                "description": "The Cloud Identity Threat Protection Essentials solution looks for most common cloud focused identity attacks such as Suspicious Sign-ins, privilege grants, MFA disable etc.",
-                                "value": "Cloud Identity Threat Protection Essentials"
+                                "value": "azuresentinel.azure-sentinel-solution-azurekeyvault"
                             },
                             {
-                                "label": "Cloud Service Threat Protection Essentials",
-                                "description": "The Cloud Service Threat Protection Essentials contains security content that is relevant for detection of attacks against various cloud services like key vault, storage, compute etc.",
-                                "value": "Cloud Service Threat Protection Essentials"
+                                "value": "azuresentinel.azure-sentinel-solution-azurestorageaccount"
                             },
                             {
-                                "label": "Endpoint Threat Protection Essentials",
-                                "description": "The Endpoint Threat Protection Essentials solution provides content to monitor, detect and investigate threats related to windows machines.",
-                                "value": "Endpoint Threat Protection Essentials"
+                                "value": "azuresentinel.azure-sentinel-solution-azurewebapplicationfirewal"
                             },
                             {
-                                "label": "Network Session Essentials",
-                                "description": "The Network Session Essentials solution leverages the Advanced Security Information Model (ASIM) to correlate insights across 15+ networking data sources and deliver more value for SOC use cases with less content.",
-                                "value": "Network Session Essentials"
-                            }, 
-                            {
-                                "label": "Network Threat Protection Essentials",
-                                "description": "The Network Threat Protection Essentials solution contains queries that identifies suspicious network behavior based on various data sources ingested in Sentinel.",
-                                "value": "Network Threat Protection Essentials"
+                                "value": "azuresentinel.azure-sentinel-solution-commoneventformat"
                             },
                             {
-                                "label": "SOC Handbook",
-                                "description": "The SOC Handbook solution for Microsoft Sentinel provides a collection of resources that enable and empower SOC Analysts to get better visibility and understanding of point-in-time security posture of organizational resources.",
-                                "value": "SOC Handbook"
+                                "value": "azuresentinel.azure-sentinel-solution-customlogsviaama"
                             },
                             {
-                                "label": "SOC Process Framework",
-                                "description": "The SOC Process Framework Solution is built in order to easily integrate with Microsoft Sentinel and build a standard SOC Process and Procedure Framework within your Organization.",
-                                "value": "SOC Process Framework"
+                                "value": "azuresentinel.azure-sentinel-solution-azureactivedirectory"
                             },
                             {
-                                "label": "UEBA Essentials",
-                                "description": "The Sentinel UEBA content package will provide you with various queries based on UEBA tables, that allows you to hunt for tailored threat scenarios.",
-                                "value": "UEBA Essentials"
+                                "value": "azuresentinel.azure-sentinel-solution-microsoft365defender"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-microsoftdefenderendpoint"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-mdefenderforidentity"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-microsoftdefenderforo365"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-microsoftdefendercloudapps"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-azureactivedirectoryip"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-networksecuritygroup"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-office365"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-syslog"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-threatintelligence-updated"
                             }
-                          ],
-                          "required": false
-                      },
-                      "visible": true
-                  },
-                  {
-                    "name": "enableSolutionsTraining",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select Training and Tutorials Content Hub solutions to install",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "filter": true,
-                      "filterPlaceholder": "Filter items ...",
-                      "multiLine": true,
-                      "defaultDescription": "A value for selection",
-                      "toolTip": "Select the training and tutorials solutions that you would like to install",
-                      "constraints": {
-                          "allowedValues": [
+                        ]
+                    },
+                    {
+                        "name": "enableSolutionsEssentials",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Essentials Content Hub solutions to install",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "defaultDescription": "A value for selection",
+                        "toolTip": "Select essentials solutions that you would like to install",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Attacker Tools Threat Protection Essentials",
+                                    "description": "The Attacker Tools Threat Protection Essentials solution contains security content that is relevant for detection of tools commonly used by attackers in various campaigns",
+                                    "value": "azuresentinel.azure-sentinel-solution-attackertools"
+                                },
+                                {
+                                    "label": "Cloud Identity Threat Protection Essentials",
+                                    "description": "The Cloud Identity Threat Protection Essentials solution looks for most common cloud focused identity attacks such as Suspicious Sign-ins, privilege grants, MFA disable etc.",
+                                    "value": "azuresentinel.azure-sentinel-solution-cloudthreatdetection"
+                                },
+                                {
+                                    "label": "Cloud Service Threat Protection Essentials",
+                                    "description": "The Cloud Service Threat Protection Essentials contains security content that is relevant for detection of attacks against various cloud services like key vault, storage, compute etc.",
+                                    "value": "azuresentinel.azure-sentinel-solution-cloudservicedetection"
+                                },
+                                {
+                                    "label": "Endpoint Threat Protection Essentials",
+                                    "description": "The Endpoint Threat Protection Essentials solution provides content to monitor, detect and investigate threats related to windows machines.",
+                                    "value": "azuresentinel.azure-sentinel-solution-endpointthreat"
+                                },
+                                {
+                                    "label": "Network Session Essentials",
+                                    "description": "The Network Session Essentials solution leverages the Advanced Security Information Model (ASIM) to correlate insights across 15+ networking data sources and deliver more value for SOC use cases with less content.",
+                                    "value": "azuresentinel.azure-sentinel-solution-networksession"
+                                },
+                                {
+                                    "label": "Network Threat Protection Essentials",
+                                    "description": "The Network Threat Protection Essentials solution contains queries that identifies suspicious network behavior based on various data sources ingested in Sentinel.",
+                                    "value": "azuresentinel.azure-sentinel-solution-networkthreatdetection"
+                                },
+                                {
+                                    "label": "SOC Handbook",
+                                    "description": "The SOC Handbook solution for Microsoft Sentinel provides a collection of resources that enable and empower SOC Analysts to get better visibility and understanding of point-in-time security posture of organizational resources.",
+                                    "value": "microsoftsentinelcommunity.azure-sentinel-solution-sochandbook"
+                                },
+                                {
+                                    "label": "SOC Process Framework",
+                                    "description": "The SOC Process Framework Solution is built in order to easily integrate with Microsoft Sentinel and build a standard SOC Process and Procedure Framework within your Organization.",
+                                    "value": "azuresentinel.azure-sentinel-solution-socprocessframework"
+                                },
+                                {
+                                    "label": "UEBA Essentials",
+                                    "description": "The Sentinel UEBA content package will provide you with various queries based on UEBA tables, that allows you to hunt for tailored threat scenarios.",
+                                    "value": "azuresentinel.azure-sentinel-solution-uebaessentials"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": true,
+                        "defaultValue": [
                             {
-                                "label": "KQL Training",
-                                "description": "The KQL Training solution for Microsoft Sentinel contains resources that can help up – skill on understanding the fundamentals and using KQL in advanced scenarios like authoring effective and optimized queries used in Sentinel Analytics, Hunting Queries, Workbooks, etc.",
-                                "value": "KQL Training"
+                                "value": "azuresentinel.azure-sentinel-solution-attackertools"
                             },
                             {
-                                "label": "Training Lab",
-                                "description": "Microsoft Sentinel Training Lab helps you get ramped up with Microsoft Sentinel providing hands-on practical experience for product features, capabilities, and scenarios.",
+                                "value": "azuresentinel.azure-sentinel-solution-cloudthreatdetection"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-cloudservicedetection"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-endpointthreat"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-networksession"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-networkthreatdetection"
+                            },
+                            {
+                                "value": "microsoftsentinelcommunity.azure-sentinel-solution-sochandbook"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-socprocessframework"
+                            },
+                            {
+                                "value": "azuresentinel.azure-sentinel-solution-uebaessentials"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "enableSolutionsTraining",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Training and Tutorials Content Hub solutions to install",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "defaultDescription": "A value for selection",
+                        "toolTip": "Select the training and tutorials solutions that you would like to install",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "KQL Training",
+                                    "description": "The KQL Training solution for Microsoft Sentinel contains resources that can help up – skill on understanding the fundamentals and using KQL in advanced scenarios like authoring effective and optimized queries used in Sentinel Analytics, Hunting Queries, Workbooks, etc.",
+                                    "value": "microsoftsentinelcommunity.azure-sentinel-solution-kqltraining"
+                                },
+                                {
+                                    "label": "Training Lab",
+                                    "description": "Microsoft Sentinel Training Lab helps you get ramped up with Microsoft Sentinel providing hands-on practical experience for product features, capabilities, and scenarios.",
+                                    "value": "Microsoft Sentinel Training Lab"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": true,
+                        "defaultValue": [
+                            {
+                                "value": "microsoftsentinelcommunity.azure-sentinel-solution-kqltraining"
+                            },
+                            {
                                 "value": "Microsoft Sentinel Training Lab"
                             }
-                          ],
-                          "required": false
-                      },
-                      "visible": true
-                  }
-              ]
-          },
-          {
-              "name": "dataConnectors",
-              "label": "Data connectors",
-              "elements": [
-                  {
-                      "name": "infoBoxConnectors",
-                      "type": "Microsoft.Common.InfoBox",
-                      "visible": true,
-                      "options": {
-                          "icon": "Info",
-                          "text": "Please select which Data Connectors you would like to configure in your Microsoft Sentinel environment",
-                          "uri": "https://learn.microsoft.com/azure/sentinel/data-connectors-reference"
-                      }
-                  },
-                  {
-                      "name": "enableDataConnectors",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select data connectors to onboard",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "filter": true,
-                      "filterPlaceholder": "Filter items ...",
-                      "multiLine": true,
-                      "defaultDescription": "A value for selection",
-                      "toolTip": "Select the data connectors that you would like to enable",
-                      "constraints": {
-                          "allowedValues": [
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "dataConnectors",
+                "label": "Data connectors",
+                "elements": [
+                    {
+                        "name": "infoBoxConnectors",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": true,
+                        "options": {
+                            "icon": "Info",
+                            "text": "Please select which Data Connectors you would like to configure in your Microsoft Sentinel environment",
+                            "uri": "https://learn.microsoft.com/azure/sentinel/data-connectors-reference"
+                        }
+                    },
+                    {
+                        "name": "enableDataConnectors",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select data connectors to onboard",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "defaultDescription": "A value for selection",
+                        "toolTip": "Select the data connectors that you would like to enable",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Entra ID",
+                                    "description": "Relevant license and Global Admin or Security Admin permission required.",
+                                    "value": "AzureActiveDirectory"
+                                },
+                                {
+                                    "label": "Azure Activity",
+                                    "description": "This will only bring logs from the subscription selected in Basics tab. Relevant permissions at the subscription level are required.",
+                                    "value": "AzureActivity"
+                                },
+                                {
+                                    "label": "Dynamics 365",
+                                    "description": "Relevant license and Global Admin or Security Admin permission required",
+                                    "value": "Dynamics365"
+                                },
+                                {
+                                    "label": "Microsoft Insider Risk Management",
+                                    "description": "Relevant license and Global Admin or Security Admin permission required",
+                                    "value": "OfficeIRM"
+                                },
+                                {
+                                    "label": "Microsoft PowerBI",
+                                    "description": "Relevant license and Global Admin or Security Admin permission required",
+                                    "value": "OfficePowerBI"
+                                },
+                                {
+                                    "label": "Microsoft Project",
+                                    "description": "Relevant license and Global Admin or Security Admin permission required",
+                                    "value": "Office365Project"
+                                },
+                                {
+                                    "label": "Office 365",
+                                    "description": "Relevant license and Global Admin or Security Admin permission required",
+                                    "value": "Office365"
+                                }
+                            ],
+                            "required": true
+                        },
+                        "visible": true,
+                        "defaultValue": [
                             {
-                                "label": "Entra ID",
-                                "description": "Relevant license and Global Admin or Security Admin permission required.",
                                 "value": "AzureActiveDirectory"
-                            },  
+                            },
                             {
-                                "label": "Azure Activity",
-                                "description": "This will only bring logs from the subscription selected in Basics tab. Relevant permissions at the subscription level are required.",
                                 "value": "AzureActivity"
                             },
                             {
-                                "label": "Dynamics 365",
-                                "description": "Relevant license and Global Admin or Security Admin permission required",
-                                "value": "Dynamics365"
-                            },
-                            {
-                                "label": "Microsoft Insider Risk Management",
-                                "description": "Relevant license and Global Admin or Security Admin permission required",
-                                "value": "OfficeIRM"
-                            },
-                            {
-                                "label": "Microsoft PowerBI",
-                                "description": "Relevant license and Global Admin or Security Admin permission required",
-                                "value": "OfficePowerBI"
-                            },
-                            {
-                                "label": "Microsoft Project",
-                                "description": "Relevant license and Global Admin or Security Admin permission required",
-                                "value": "Office365Project"
-                            },
-                            {
-                                "label": "Office 365",
-                                "description": "Relevant license and Global Admin or Security Admin permission required",
                                 "value": "Office365"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "aadStreams",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Entra ID log types to enable",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "defaultValue": [
+                            {
+                                "value": "SignInLogs"
                             },
                             {
-                                "label": "Threat Intelligence Platforms",
-                                "description": "Global Admin or Security Admin permission required",
-                                "value": "ThreatIntelligence"
+                                "value": "AuditLogs"
+                            },
+                            {
+                                "value": "NonInteractiveUserSignInLogs"
+                            },
+                            {
+                                "value": "ServicePrincipalSignInLogs"
+                            },
+                            {
+                                "value": "ManagedIdentitySignInLogs"
+                            },
+                            {
+                                "value": "ProvisioningLogs"
+                            },
+                            {
+                                "value": "ADFSSignInLogs"
+                            },
+                            {
+                                "value": "UserRiskEvents"
+                            },
+                            {
+                                "value": "RiskyUsers"
+                            },
+                            {
+                                "value": "NetworkAccessTrafficLogs"
+                            },
+                            {
+                                "value": "RiskyServicePrincipals"
+                            },
+                            {
+                                "value": "ServicePrincipalRiskEvents"
+                            },
+                            {
+                                "value": "MicrosoftGraphActivityLogs"
+                            },
+                            {
+                                "value": "EnrichedOffice365AuditLogs"
+                            },
+                            {
+                                "value": "RemoteNetworkHealthLogs"
                             }
-                          ],
-                          "required": true
-                      },
-                      "visible": true
-                  },
-                  {
-                    "name": "aadStreams",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select Entra ID log types to enable",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "defaultValue": [{"value": "SignInLogs"}, {"value": "AuditLogs"}],
-                      "toolTip": "Select Entra ID log types you would like to stream to the workspace",
-                      "constraints": {
-                          "allowedValues": [
-                              {
-                                  "label": "Signin Logs",
-                                  "value": "SignInLogs"
-                              },
-                              {
-                                  "label": "Audit Logs",
-                                  "value": "AuditLogs"
-                              },
-                              {
-                                  "label": "Non-Interactive User Sign-In Log (Preview)",
-                                  "value": "NonInteractiveUserSignInLogs"
-                              },
-                              {
-                                  "label": "Service Principal Sign-In Logs (Preview)",
-                                  "value": "ServicePrincipalSignInLogs"
-                              },
-                              {
-                                  "label": "Managed Identity Sign-In Logs (Preview)",
-                                  "value": "ManagedIdentitySignInLogs"
-                              },
-                              {
-                                  "label": "Provisioning Logs (Preview)",
-                                  "value": "ProvisioningLogs"
-                              },
-                              {
-                                  "label": "ADFS Sign-In Logs (Preview)",
-                                  "value": "ADFSSignInLogs"
-                              },
-                              {
-                                  "label": "User Risk Events (Preview)",
-                                  "value": "UserRiskEvents"
-                              },
-                              {
-                                  "label": "Risky Users (Preview)",
-                                  "value": "RiskyUsers"
-                              },
-                              {
-                                  "label": "Network Access Traffic Logs (Preview)",
-                                  "value": "NetworkAccessTrafficLogs"
-                              },
-                              {
-                                  "label": "Risky Service Principals (Preview)",
-                                  "value": "RiskyServicePrincipals"
-                              },
-                              {
-                                  "label": "Service Principal Risk Events (Preview)",
-                                  "value": "ServicePrincipalRiskEvents"
-                              }
-                          ],
-                          "required": false
-                      },
-                      "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'AzureActiveDirectory'),true,false)]"
-                  }
-              ]
-          },
-          {
-              "name": "analyticsRules",
-              "label": "Analytics Rules",
-              "elements": [
-                  {
-                      "name": "infoBoxRules",
-                      "type": "Microsoft.Common.InfoBox",
-                      "visible": true,
-                      "options": {
-                          "icon": "Info",
-                          "text": "Please select which analytics rules you would like to enable in your Microsoft Sentinel environment",
-                          "uri": "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
-                      }
-                  },
-                  {
-                      "name": "enableMLAlerts",
-                      "type": "Microsoft.Common.CheckBox",
-                      "label": "Enable ML Behavior Analytics alert rules?",
-                      "toolTip": "Select to enable ML Behavior Analytics rules for selected connectors (SecurityEvents and/or Syslog)",
-                      "constraints": {
-                          "required": false,
-                          "validationMessage": "Enables SSH and/or RDP anomalous login alerts"
-                      },
-                      "visible": "[if(or(contains(steps('dataConnectors').enableDataConnectors,'Syslog'),contains(steps('dataConnectors').enableDataConnectors,'SecurityEvents')), true, false)]"
-                  },
-                  {
-                      "name": "enableScheduledAlerts",
-                      "type": "Microsoft.Common.CheckBox",
-                      "label": "Enable Scheduled alert rules for selected Content Hub solutions and Data Connectors?",
-                      "toolTip": "Select to enable Scheduled and NRT analytics rules for the solutions and connectors selected in the previous tabs",
-                      "constraints": {
-                          "required": false,
-                          "validationMessage": "Enables Scheduled and NRT rules matching any of the selected solutions and connectors"
-                      },
-                      "visible": true
-                  },
-                  {
-                      "name": "severityLevels",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select the severity of the rules to enable",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "defaultValue": [{"value": "High"}, {"value": "Medium"}],
-                      "toolTip": "Select the data connectors that you would like to enable",
-                      "constraints": {
-                          "allowedValues": [
-                              {
-                                  "label": "High",
-                                  "value": "High"
-                              },
-                              {
-                                  "label": "Medium",
-                                  "value": "Medium"
-                              },
-                              {
-                                  "label": "Low",
-                                  "value": "Low"
-                              },
-                              {
-                                  "label": "Informational",
-                                  "value": "informational"
-                              }
-                          ],
-                          "required": false
-                      },
-                      "visible": "[if(steps('analyticsRules').enableScheduledAlerts, true, false)]"
-                  }
-              ]
-          },
-          {
-            "name": "xdrLighthouse",
-            "label": "XDR Lighthouse Connection",
-            "elements": [
-                {
-                    "name": "infoBoxRules",
-                    "type": "Microsoft.Common.InfoBox",
-                    "visible": true,
-                    "options": {
-                        "icon": "Info",
-                        "text": "Please choose whether you would like to setup the connection to Avertium XDR via Lighthouse",
-                        "uri": ""
+                        ],
+                        "toolTip": "Select Entra ID log types you would like to stream to the workspace",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Signin Logs",
+                                    "value": "SignInLogs"
+                                },
+                                {
+                                    "label": "Audit Logs",
+                                    "value": "AuditLogs"
+                                },
+                                {
+                                    "label": "Non-Interactive User Sign-In Log (Preview)",
+                                    "value": "NonInteractiveUserSignInLogs"
+                                },
+                                {
+                                    "label": "Service Principal Sign-In Logs (Preview)",
+                                    "value": "ServicePrincipalSignInLogs"
+                                },
+                                {
+                                    "label": "Managed Identity Sign-In Logs (Preview)",
+                                    "value": "ManagedIdentitySignInLogs"
+                                },
+                                {
+                                    "label": "Provisioning Logs (Preview)",
+                                    "value": "ProvisioningLogs"
+                                },
+                                {
+                                    "label": "ADFS Sign-In Logs (Preview)",
+                                    "value": "ADFSSignInLogs"
+                                },
+                                {
+                                    "label": "User Risk Events (Preview)",
+                                    "value": "UserRiskEvents"
+                                },
+                                {
+                                    "label": "Risky Users (Preview)",
+                                    "value": "RiskyUsers"
+                                },
+                                {
+                                    "label": "Network Access Traffic Logs (Preview)",
+                                    "value": "NetworkAccessTrafficLogs"
+                                },
+                                {
+                                    "label": "Risky Service Principals (Preview)",
+                                    "value": "RiskyServicePrincipals"
+                                },
+                                {
+                                    "label": "Service Principal Risk Events (Preview)",
+                                    "value": "ServicePrincipalRiskEvents"
+                                },
+                                {
+                                    "label": "Microsoft Graph Activity Logs",
+                                    "value": "MicrosoftGraphActivityLogs"
+                                },
+                                {
+                                    "label": "Enriched Office 365 Audit Logs (Preview)",
+                                    "value": "EnrichedOffice365AuditLogs"
+                                },
+                                {
+                                    "label": "Remote Network Health Logs (Preview)",
+                                    "value": "RemoteNetworkHealthLogs"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'AzureActiveDirectory'),true,false)]"
                     }
-                },
-                {
-                    "name": "enableXDR",
-                    "type": "Microsoft.Common.CheckBox",
-                    "label": "Enable XDR Lighthouse connection for Avertium Managed Services?",
-                    "toolTip": "Select to enable XDR Lighthouse connection for Avertium Managed Services?",
-                    "constraints": {
-                        "required": false,
-                        "validationMessage": "Enables XDR Lighthouse connection for the given "
-                    }
-                },
-                {
-                    "name": "mspTenantId",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Managing Tenant ID",
-                    "placeholder": "",
-                    "defaultValue": "",
-                    "toolTip": "Enter the managing account's tenant id",
-                    "constraints": {
-                        "required": "[steps('xdrLighthouse').enableXDR]",
-                        "regex": "^[A-Za-z0-9]{8}-[A-Za-z0-9-]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$",
-                        "validationMessage": "Only a valid tenant ID is allowed."
+                ]
+            },
+            {
+                "name": "analyticsRules",
+                "label": "Analytics Rules",
+                "elements": [
+                    {
+                        "name": "infoBoxRules",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": true,
+                        "options": {
+                            "icon": "Info",
+                            "text": "Please select which analytics rules you would like to enable in your Microsoft Sentinel environment",
+                            "uri": "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+                        }
                     },
-                    "visible": "[steps('xdrLighthouse').enableXDR]"  
-                }
-            ]
-          }
+                    {
+                        "name": "enableMLAlerts",
+                        "type": "Microsoft.Common.CheckBox",
+                        "label": "Enable ML Behavior Analytics alert rules?",
+                        "toolTip": "Select to enable ML Behavior Analytics rules for selected connectors (SecurityEvents and/or Syslog)",
+                        "constraints": {
+                            "required": false,
+                            "validationMessage": "Enables SSH and/or RDP anomalous login alerts"
+                        },
+                        "visible": "[if(or(contains(steps('dataConnectors').enableDataConnectors,'Syslog'),contains(steps('dataConnectors').enableDataConnectors,'SecurityEvents')), true, false)]"
+                    },
+                    {
+                        "name": "enableScheduledAlerts",
+                        "type": "Microsoft.Common.CheckBox",
+                        "label": "Enable Scheduled alert rules for selected Content Hub solutions and Data Connectors?",
+                        "toolTip": "Select to enable Scheduled and NRT analytics rules for the solutions and connectors selected in the previous tabs",
+                        "constraints": {
+                            "required": false,
+                            "validationMessage": "Enables Scheduled and NRT rules matching any of the selected solutions and connectors"
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "severityLevels",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select the severity of the rules to enable",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "defaultValue": [
+                            {
+                                "value": "High"
+                            },
+                            {
+                                "value": "Medium"
+                            }
+                        ],
+                        "toolTip": "Select the data connectors that you would like to enable",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "High",
+                                    "value": "High"
+                                },
+                                {
+                                    "label": "Medium",
+                                    "value": "Medium"
+                                },
+                                {
+                                    "label": "Low",
+                                    "value": "Low"
+                                },
+                                {
+                                    "label": "Informational",
+                                    "value": "informational"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": "[if(steps('analyticsRules').enableScheduledAlerts, true, false)]"
+                    }
+                ]
+            },
+            {
+                "name": "xdrLighthouse",
+                "label": "XDR Lighthouse Connection",
+                "elements": [
+                    {
+                        "name": "infoBoxRules",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": true,
+                        "options": {
+                            "icon": "Info",
+                            "text": "Please choose whether you would like to setup the connection to Avertium XDR via Lighthouse",
+                            "uri": ""
+                        }
+                    },
+                    {
+                        "name": "enableXDR",
+                        "type": "Microsoft.Common.CheckBox",
+                        "label": "Enable XDR Lighthouse connection for Avertium Managed Services?",
+                        "toolTip": "Select to enable XDR Lighthouse connection for Avertium Managed Services?",
+                        "constraints": {
+                            "required": false,
+                            "validationMessage": "Enables XDR Lighthouse connection for the given "
+                        }
+                    },
+                    {
+                        "name": "mspTenantId",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Managing Tenant ID",
+                        "placeholder": "",
+                        "defaultValue": "",
+                        "toolTip": "Enter the managing account's tenant id",
+                        "constraints": {
+                            "required": "[steps('xdrLighthouse').enableXDR]",
+                            "regex": "^[A-Za-z0-9]{8}-[A-Za-z0-9-]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$",
+                            "validationMessage": "Only a valid tenant ID is allowed."
+                        },
+                        "visible": "[steps('xdrLighthouse').enableXDR]"
+                    }
+                ]
+            }
         ],
         "outputs": {
             "workspaceName": "[basics('workspaceName')]",

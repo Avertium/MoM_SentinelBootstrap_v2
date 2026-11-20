@@ -347,6 +347,9 @@
                     },
                     "location": {
                         "value": "[parameters('location')]"
+                    },
+                    "artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
                     }
                 }
             }
