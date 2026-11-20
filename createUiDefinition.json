@@ -320,11 +320,6 @@
                                     "value": "azuresentinel.azure-sentinel-solution-insiderriskmanagement"
                                 },
                                 {
-                                    "label": "Microsoft PowerBI",
-                                    "description": "The Microsoft PowerBI solution enables you to track user activities in your PowerBI environment.",
-                                    "value": "azuresentinel.azure-sentinel-solution-microsoftpowerbi"
-                                },
-                                {
                                     "label": "Microsoft Project",
                                     "description": "Stream your Microsoft Project audit logs into Microsoft Sentinel in order to track your project activities.",
                                     "value": "azuresentinel.azure-sentinel-solution-microsoftproject"
@@ -580,11 +575,6 @@
                                     "value": "OfficeIRM"
                                 },
                                 {
-                                    "label": "Microsoft PowerBI",
-                                    "description": "Relevant license and Global Admin or Security Admin permission required",
-                                    "value": "OfficePowerBI"
-                                },
-                                {
                                     "label": "Microsoft Project",
                                     "description": "Relevant license and Global Admin or Security Admin permission required",
                                     "value": "Office365Project"
@@ -748,17 +738,6 @@
                         }
                     },
                     {
-                        "name": "enableMLAlerts",
-                        "type": "Microsoft.Common.CheckBox",
-                        "label": "Enable ML Behavior Analytics alert rules?",
-                        "toolTip": "Select to enable ML Behavior Analytics rules for selected connectors (SecurityEvents and/or Syslog)",
-                        "constraints": {
-                            "required": false,
-                            "validationMessage": "Enables SSH and/or RDP anomalous login alerts"
-                        },
-                        "visible": "[if(or(contains(steps('dataConnectors').enableDataConnectors,'Syslog'),contains(steps('dataConnectors').enableDataConnectors,'SecurityEvents')), true, false)]"
-                    },
-                    {
                         "name": "enableScheduledAlerts",
                         "type": "Microsoft.Common.CheckBox",
                         "label": "Enable Scheduled alert rules for selected Content Hub solutions and Data Connectors?",
@@ -831,7 +810,8 @@
                         "constraints": {
                             "required": false,
                             "validationMessage": "Enables XDR Lighthouse connection for the given "
-                        }
+                        },
+                        "defaultValue": true
                     },
                     {
                         "name": "mspTenantId",
@@ -865,7 +845,6 @@
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
             "location": "[location()]",
-            "enableMLAlerts": "[steps('analyticsRules').enableMLAlerts]",
             "enableScheduledAlerts": "[steps('analyticsRules').enableScheduledAlerts]",
             "severityLevels": "[steps('analyticsRules').severityLevels]",
             "enableXDRLighthouse": "[steps('xdrLighthouse').enableXDR]",

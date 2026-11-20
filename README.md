@@ -16,82 +16,21 @@ Microsoft Sentinel All-in-One automates the following tasks:
 - Creates Log Analytics workspace
 - Installs Microsoft Sentinel on top of the workspace
 - Sets workspace retention, daily cap and commitment tiers if desired
-- Enables UEBA with the relevant identity providers (AAD and/or AD)
+- Enables UEBA with the relevant identity providers (Entra ID and/or Active Directory)
 - Enables health diagnostics for Analytics Rules, Data Connectors and Automation Rules
-- Installs Content Hub solutions from a predefined list in three categories: 1st party, Essentials and Training
+- Installs Content Hub solutions from a predefined list in three categories: Microsoft, Essentials and Training
+- ✨Installs Avertium's standard connector set (see [Standard connector set](#standard-connector-set))
 - Enables Data Connectors from this list:
-    + Entra ID (with the ability to select which data types will be ingested; ✨all 15 log types selected by default)
-    + ✨Azure Activity (from current subscription, via a subscription diagnostic setting)
+    + Entra ID (with the ability to select which log types will be ingested)
+    + ✨Azure Activity (from current subscription)
     + Dynamics 365
-    + Microsoft 365 Defender
-    + Microsoft Defender for Cloud
     + Microsoft Insider Risk Management
-    + Microsoft Power BI
     + Microsoft Project
     + Office 365
-    + ✨Microsoft Defender Threat Intelligence (Threat Intelligence solution)
-- ✨Installs Avertium's standard connector set as Content Hub solutions (see [Standard connector set](#standard-connector-set))
 - Enables analytics rules (Scheduled and NRT) included in the selected Content Hub solutions, with the ability to filter by severity
-- Enables analytics rules (Scheduled and NRT) that use any of the selected Data connectors, with the ability to filter by severity
-- ✨Connects to an Azure lighthouse
+- ✨Connects to an Azure Lighthouse offer for Avertium Managed Services
 
 ✨ Denotes customizations made in this fork of the All-in-One template
-
-## Changes in v2
-
-This repo (`MoM_SentinelBootstrap_v2`) replaces the original `MoM_SentinelBootstrap` repo. Changes:
-
-- **Removed FusionEngine connectors.** The FusionEngine - LogRhythm, FusionEngine - SentinelOne and FusionEngine - Splunk options were removed from the wizard, along with their custom tables, data collection rules and data collection endpoint (`customLogTables.json`, `dataCollectionRules.json`, `dataCollectionEndpoint.json`).
-- **Removed the legacy Entra ID Identity Protection connector setup.** Workspaces onboarded to the Microsoft Defender portal (new Sentinel workspaces are often onboarded automatically) receive Identity Protection alerts through Defender XDR, and the legacy connector can no longer be changed from Sentinel. Deploying it failed with *"The workspace is enabled through the Microsoft Threat Protection Portal"*. The Entra ID Protection Content Hub solution is still installed.
-- **Azure Activity uses a subscription diagnostic setting.** The legacy `AzureActivityLog` data source is deprecated by Microsoft (*DataSourceDeprecated*). The template now creates a subscription diagnostic setting named `<workspaceName>-AzureActivity` that sends all Activity log categories to the workspace.
-- **Entra ID diagnostic setting can be skipped.** If `aadStreams` is empty, the Entra ID diagnostic setting is not created.
-- **Repo location updated.** The Deploy to Azure button and the `_artifactsLocation` default now point to `https://raw.githubusercontent.com/Avertium/MoM_SentinelBootstrap_v2/master/`.
-- **Standard connector set.** The wizard and the parameter file preselect Avertium's standard Content Hub solutions and their analytics rules (see [Standard connector set](#standard-connector-set)).
-- **Content Hub solutions are selected by ID.** The wizard now passes each solution's Content Hub ID (for example `azuresentinel.azure-sentinel-solution-azureactivedirectory`) instead of its display name, so renamed solutions (Azure Active Directory → Microsoft Entra ID) still install. Display names still work. Solutions that aren't found are listed as a warning in the `deployRules` deployment script log.
-- **Rules script hosted in this repo.** The `deployRules` deployment script now runs `Scripts/Create-NewSolutionAndRulesFromList.ps1` from `_artifactsLocation`, not from a third-party GitHub repo. It no longer creates Microsoft incident creation rules, because Defender XDR already creates those incidents.
-- **Entra ID log types.** Added Microsoft Graph Activity Logs, Enriched Office 365 Audit Logs and Remote Network Health Logs. All 15 log types are selected by default.
-- **Threat Intelligence uses the current solution.** The wizard installs **Threat Intelligence (NEW)**, whose rules query the current `ThreatIntelIndicators` table. The older solution queries `ThreatIntelligenceIndicator`, which Microsoft stopped filling on July 31, 2025. The deprecated *Threat Intelligence Platforms* connector option was removed from the wizard.
-- **Parameter file added.** `azuredeploy.parameters.json` prefills the wizard with Avertium's standard selections (see below).
-
-## Deployment notes
-
-- **This repo must be public.** Azure downloads `azuredeploy.json`, `createUiDefinition.json` and everything in `LinkedTemplates/` anonymously from `_artifactsLocation`. If the repo is private, or the files are not at the repo root, the deployment fails or uses outdated templates.
-- **Testing a branch:** set `_artifactsLocation` to `https://raw.githubusercontent.com/Avertium/MoM_SentinelBootstrap_v2/<branch>/` (keep the trailing slash). Changing only the Deploy to Azure link is not enough, because the linked templates are always downloaded from `_artifactsLocation`.
-- **Diagnostic settings limit:** Entra ID (tenant) and each subscription allow a maximum of 5 diagnostic settings. If the limit is reached, the deployment fails with *"The limit of 5 diagnostic settings was reached"*. Delete an unused setting (Entra ID > Monitoring & health > Diagnostic settings, or Monitor > Activity log > Export Activity Logs) and redeploy.
-- **Redeploying:** to an existing workspace, set `enableUeba` to `false`, otherwise the `settings` step fails with *"Update request should provide ETag"*.
-
-## Standard connector set
-
-Installed as Content Hub solutions, with their analytics rules:
-
-| Connector | How it's connected |
-| --------- | ------------------ |
-| Azure Activity, Microsoft Entra ID, Microsoft 365 | Connected by the template |
-| Azure Key Vault, Azure Storage Account, Azure Web Application Firewall (WAF), Network Security Groups | After deployment: add a diagnostic setting to each resource, sending logs to the workspace |
-| Common Event Format (CEF) via AMA, Syslog via AMA, Custom logs via AMA | After deployment: create a Data Collection Rule and install the Azure Monitor Agent on the forwarders/servers |
-| Threat Intelligence (Microsoft Defender Threat Intelligence) | After deployment: open the **Microsoft Defender Threat Intelligence** connector and select **Connect**. It's free and feeds the TI map rules |
-| Microsoft Defender XDR, Defender for Endpoint, Defender for Identity, Defender for Office 365, Defender for Cloud Apps, Defender alerts, Defender Vulnerability Management, Purview DLP, Entra ID Protection | After deployment: in the Microsoft Defender XDR connector, turn on incidents and the event tables you need. On workspaces onboarded to the Defender portal this can't be done from a template |
-
-Analytics rules whose tables don't exist yet in the workspace may be rejected by Sentinel. They are listed as errors in the `deployRules` deployment script log and can be enabled later from **Analytics > Rule templates**.
-
-## Parameter file
-
-`azuredeploy.parameters.json` prefills the deployment with:
-
-| Setting | Value |
-| ------- | ----- |
-| Resource group / Workspace name | `<RESOURCE_GROUP_NAME>` / `<WORKSPACE_NAME>` (replace before deploying) |
-| UEBA | Enabled (identity provider: Entra ID) |
-| Sentinel health diagnostics | Enabled |
-| Microsoft Content Hub solutions | The [standard connector set](#standard-connector-set) |
-| Essentials solutions | All |
-| Training and Tutorials solutions | All |
-| Data connectors | Entra ID (all 15 log types), Azure Activity, Office 365 |
-| Scheduled alert rules | Enabled (High and Medium severity) |
-| XDR Lighthouse connection | Enabled, Managing Tenant ID `<MANAGING_TENANT_ID>` (replace before deploying) |
-| Location / Pricing / Retention / Daily cap | `westus2` / Pay-as-you-go / 90 days / none |
-
-To use it: open the custom deployment, select **Edit parameters** > **Load file**, choose `azuredeploy.parameters.json`, replace the placeholders and save.
 
 ## Prerequisites
 
@@ -105,16 +44,102 @@ To use it: open the custom deployment, select **Edit parameters** > **Load file*
     <img src="https://aka.ms/deploytoazurebutton""/>
 </a>
 
+## Parameters
+
+Each parameter is listed with the wizard field where it is set. Parameters marked *Parameter file only* are not shown in the wizard.
+
+### Basics
+
+| Parameter | Wizard field | Description | Default |
+| --------- | ------------ | ----------- | ------- |
+| `rgName` | Resource Group name | Name of the resource group to create. The workspace and all related resources are deployed into it. | |
+| `location` | Region | Azure region for the resource group and the workspace. | Region selected in the wizard |
+| `workspaceName` | Workspace Name | Name of the Log Analytics workspace where Microsoft Sentinel is enabled. | |
+| `pricingTier` | Select pricing tier for Sentinel and Log Analytics | `PerGB2018` (Pay-as-you-go): billed per GB ingested. `CapacityReservation` (Commitment Tier): a fixed daily volume at a lower price per GB. The full commitment is billed every day, even if less data is ingested. The tier can be increased at any time and lowered once every 31 days. | `PerGB2018` |
+| `capacityReservation` | Select Commitment Tier for Sentinel and Log Analytics | Daily volume in GB for the Commitment Tier: 100, 200, 300, 400, 500, 1000, 2000 or 5000. Only applies when `pricingTier` is `CapacityReservation`, and is ignored otherwise. | `100` |
+| `dailyQuota` | Daily ingestion limit in GBs | Daily cap on ingested data, in GB. When the cap is reached, ingestion stops until the daily reset and new data is dropped, which leaves a gap in detections. `0` means no cap. | `0` |
+| `dataRetention` | Number of days of retention | Number of days data is kept in the workspace (30 to 730). Microsoft Sentinel includes the first 90 days at no extra cost. | `90` |
+| `immediatePurgeDataOn30Days` | *Parameter file only* | Only applies when `dataRetention` is 30. If `true`, data older than 30 days is deleted immediately. If `false`, it is deleted after a short grace period. Has no effect with any other retention value. | `true` |
+
+### Settings
+
+| Parameter | Wizard field | Description | Default |
+| --------- | ------------ | ----------- | ------- |
+| `enableUeba` | Enable User Entity Behavior Analytics (UEBA)? | Enables UEBA in Microsoft Sentinel. Requires Global Admin or Security Admin. | `true` |
+| `identityProviders` | Select which Identity Providers will be synchronized with UEBA | `AzureActiveDirectory` (Entra ID) and/or `ActiveDirectory` (requires Microsoft Defender for Identity). | |
+| `enableDiagnostics` | Enable Sentinel health diagnostics? | Sends health data for analytics rules, data connectors and automation rules to the workspace. | |
+
+### Content Hub solutions
+
+Solutions are identified by their Content Hub ID, for example `azuresentinel.azure-sentinel-solution-azureactivedirectory`. Display names are also accepted.
+
+| Parameter | Wizard field | Description | Default |
+| --------- | ------------ | ----------- | ------- |
+| `enableSolutions1P` | Select Microsoft Content Hub solutions to install | Microsoft solutions to install. Each solution adds its data connectors, analytics rule templates, workbooks and hunting queries. | [Standard connector set](#standard-connector-set) |
+| `enableSolutionsEssentials` | Select Essentials Content Hub solutions to install | Essentials solutions (ASIM-based detections, SOC Handbook, SOC Process Framework, UEBA Essentials). | All |
+| `enableSolutionsTraining` | Select Training and Tutorials Content Hub solutions to install | KQL Training and Microsoft Sentinel Training Lab. | All |
+
+### Data connectors
+
+| Parameter | Wizard field | Description | Default |
+| --------- | ------------ | ----------- | ------- |
+| `enableDataConnectors` | Select data connectors to onboard | Connectors configured by the template: `AzureActiveDirectory` (Entra ID), `AzureActivity`, `Dynamics365`, `OfficeIRM`, `Office365Project`, `Office365`. Entra ID creates a tenant diagnostic setting named `<workspaceName>-aadDiagnosticSetttings`. Azure Activity creates a subscription diagnostic setting named `<workspaceName>-AzureActivity`. | Entra ID, Azure Activity, Office 365 |
+| `aadStreams` | Select Entra ID log types to enable | Entra ID log types sent to the workspace. Sign-in and Microsoft Graph activity logs require Entra ID P1 or P2. Network access, remote network health and enriched Office 365 logs require Global Secure Access. If empty, the Entra ID diagnostic setting is not created. | All 15 log types |
+
+### Analytics rules
+
+| Parameter | Wizard field | Description | Default |
+| --------- | ------------ | ----------- | ------- |
+| `enableScheduledAlerts` | Enable Scheduled alert rules for selected Content Hub solutions and Data Connectors? | Creates analytics rules from the rule templates of the installed solutions. | `false` |
+| `severityLevels` | Select the severity of the rules to enable | Only rule templates with these severities are enabled: `High`, `Medium`, `Low`, `informational`. | `High`, `Medium` |
+
+### XDR Lighthouse connection
+
+| Parameter | Wizard field | Description | Default |
+| --------- | ------------ | ----------- | ------- |
+| `enableXDRLighthouse` | Enable XDR Lighthouse connection for Avertium Managed Services? | Delegates access to the subscription to Avertium through Azure Lighthouse. | `true` |
+| `mspTenantId` | Managing Tenant ID | Tenant ID of the managing (Avertium) tenant. Required when `enableXDRLighthouse` is `true`. | |
+
+### Template location
+
+| Parameter | Wizard field | Description | Default |
+| --------- | ------------ | ----------- | ------- |
+| `_artifactsLocation` | *Parameter file only* | Base URL from which the linked templates and scripts are downloaded. Must end with `/`. | `https://raw.githubusercontent.com/Avertium/MoM_SentinelBootstrap_v2/master/` |
+
+## Standard connector set
+
+The following Content Hub solutions are selected by default, together with their analytics rules:
+
+| Connector | How it's connected |
+| --------- | ------------------ |
+| Azure Activity, Microsoft Entra ID, Microsoft 365 | Connected by the template |
+| Azure Key Vault, Azure Storage Account, Azure Web Application Firewall (WAF), Network Security Groups | After deployment: add a diagnostic setting to each resource, sending logs to the workspace |
+| Common Event Format (CEF) via AMA, Syslog via AMA, Custom logs via AMA | After deployment: create a Data Collection Rule and install the Azure Monitor Agent on the forwarders or servers |
+| Threat Intelligence (Microsoft Defender Threat Intelligence) | After deployment: open the **Microsoft Defender Threat Intelligence** connector and select **Connect** |
+| Microsoft Defender XDR, Defender for Endpoint, Defender for Identity, Defender for Office 365, Defender for Cloud Apps, Defender alerts, Defender Vulnerability Management, Purview DLP, Entra ID Protection | After deployment: in the **Microsoft Defender XDR** connector, turn on incidents and the event tables you need |
+
+Analytics rules whose tables don't exist yet in the workspace can be enabled later from **Analytics > Rule templates**.
+
+## Parameter file
+
+`azuredeploy.parameters.json` contains the standard Avertium selection. Replace `<RESOURCE_GROUP_NAME>`, `<WORKSPACE_NAME>` and `<MANAGING_TENANT_ID>` before deploying.
+
+To use it: open the custom deployment, select **Edit parameters** > **Load file**, choose `azuredeploy.parameters.json` and save.
+
+## Deployment notes
+
+- **Diagnostic settings limit:** Entra ID (tenant) and each subscription allow a maximum of 5 diagnostic settings. If the limit is reached, the deployment fails with *"The limit of 5 diagnostic settings was reached"*. Delete an unused setting (Entra ID > Monitoring & health > Diagnostic settings, or Monitor > Activity log > Export Activity Logs) and redeploy.
+- **Redeploying:** to an existing workspace, set `enableUeba` to `false`, otherwise the `settings` step fails with *"Update request should provide ETag"*.
+
 ## Supported connectors
 
-The following table summarizes permissions, licenses and permissions needed and related cost to enable each Data Connector:
+The following table summarizes licenses, permissions and cost for each data connector configured by the template:
 
 | Data Connector                                 | License         |  Permissions                    | Cost      |
 | ---------------------------------------------- | --------------- |---------------------------------|-----------|
-| Entra ID (Tenant scope version only)           | Any AAD license; P1/P2 for sign-in and Graph activity logs; Global Secure Access for network and enriched Office 365 logs | Global Admin or Security Admin  | Billed    |
-| Azure Activity                                 | None            | Subscription Owner or Monitoring Contributor (to create the diagnostic setting) | Free      |
+| Entra ID (Tenant scope version only)           | Any Entra ID license; P1/P2 for sign-in and Graph activity logs; Global Secure Access for network and enriched Office 365 logs | Global Admin or Security Admin  | Billed    |
+| Azure Activity                                 | None            | Subscription Owner or Monitoring Contributor | Free      |
 | Dynamics 365                                   | D365 license    | Global Admin or Security Admin  | Billed    |
 | Microsoft Insider Risk Management              | IRM license     | Global Admin or Security Admin  | Free      |
-| Microsoft PowerBi                              | PowerBi license | Global Admin or Security Admin  | Billed    |
 | Microsoft Project                              | MS Project license | Global Admin or Security Admin | Billed  |
 | Office 365                                     | None            | Global Admin or Security Admin  | Free      |

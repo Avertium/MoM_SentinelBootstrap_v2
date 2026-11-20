@@ -129,13 +129,6 @@
         "enableDiagnostics": {
             "type": "bool"
         },
-        "enableMLAlerts": {
-            "type": "bool",
-            "metadata": {
-                "description": "Enable ML Behavior Analytics rules"
-            },
-            "defaultValue": false
-        },
         "enableScheduledAlerts": {
             "type": "bool",
             "metadata": {
@@ -155,7 +148,7 @@
             "metadata": {
                 "description": "Whether or not to add Lighthouse connection to XDR"
             },
-            "defaultValue": false
+            "defaultValue": true
         },
         "mspTenantId": {
             "type": "string",

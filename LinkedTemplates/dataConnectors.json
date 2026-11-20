@@ -50,7 +50,6 @@
         "iotName": "[concat('iot', uniqueString(resourceGroup().id))]",
         "projectName": "[concat('project', uniqueString(resourceGroup().id))]",
         "irmName": "[concat('irm', uniqueString(resourceGroup().id))]",
-        "powerbiName": "[concat('powerbi', uniqueString(resourceGroup().id))]",
         "ascName": "[concat('asc', uniqueString(resourceGroup().id))]",
         "tiName": "[concat('ti', uniqueString(resourceGroup().id))]"
     },
@@ -240,22 +239,6 @@
                 "tenantId": "[parameters('tenantId')]",
                 "dataTypes": {
                     "alerts": {
-                        "state": "enabled"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[contains(parameters('dataConnectorsKind'), 'PowerBI')]",
-            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2022-12-01-preview",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('powerbiName'))]",
-            "kind": "OfficePowerBI",
-            "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "logs": {
                         "state": "enabled"
                     }
                 }

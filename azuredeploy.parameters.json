@@ -109,9 +109,6 @@
     "enableDiagnostics": {
       "value": true
     },
-    "enableMLAlerts": {
-      "value": false
-    },
     "enableScheduledAlerts": {
       "value": true
     },
