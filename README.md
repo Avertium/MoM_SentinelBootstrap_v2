@@ -22,11 +22,17 @@ Microsoft Sentinel All-in-One automates the following tasks:
 - ✨Installs Avertium's standard connector set (see [Standard connector set](#standard-connector-set))
 - Enables Data Connectors from this list:
     + Entra ID (with the ability to select which log types will be ingested)
-    + ✨Azure Activity (from current subscription)
-    + Dynamics 365
-    + Microsoft Insider Risk Management
-    + Microsoft Project
-    + Office 365
+    + Azure Activity
+    + Azure Key Vault
+    + Azure Storage Account
+    + Azure Web Application Firewall (WAF)
+    + Common Event Format (CEF) via AMA
+    + Custom logs via AMA (Preview)
+    + Microsoft Entra ID
+    + Microsoft Defender XDR
+    + Network Security Groups
+    + Microsoft 365
+    + Syslog
 - Enables analytics rules (Scheduled and NRT) included in the selected Content Hub solutions, with the ability to filter by severity
 - ✨Connects to an Azure Lighthouse offer for Avertium Managed Services
 
